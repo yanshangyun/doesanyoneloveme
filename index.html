@@ -25,6 +25,13 @@ Only one that remains.
 
         body{
             font-family:'Times New Roman', Times, serif;
+            font-size:15px;
+        }
+
+        p{
+            margin:0;
+            padding:0;
+            line-height:0;
         }
 
         #center{
@@ -60,7 +67,7 @@ Only one that remains.
             display:flex;
             text-align:center;
             left:50%;
-            top:49%;
+            top:50%;
             transform: translate(-50%, -50%);
             z-index:101;
             color:black;
@@ -72,12 +79,16 @@ Only one that remains.
             font-family:'Times New Roman', Times, serif;
             box-sizing:border-box;
             outline:none;
+            border:none;
+            border-bottom:1px solid black;
+            background:transparent;
+            font-size:15px;
         }
     </style>
 </head>
 <body>
     <div id="intro">
-        <p>Does <input type="text" id="loveInterest" placeholder="Enter a name"> love me?</p>
+        <p>Does <input type="text" id="loveInterest" placeholder="anyone"> love me?</p>
     </div>
     <div id="center">
         <p>Does <span id="nameCenter"></span> love me?<br><span id ="answer">Find your answer.</span></p>
