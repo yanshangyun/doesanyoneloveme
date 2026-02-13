@@ -1,0 +1,189 @@
+<!-- 
+A quiet room, a keyboard, a dimly lit screen
+This site understands the rituals of love calculators, magic 8-balls, and plucking petals
+Our urge to find comfort in probability.
+
+Built with only simple HTML and JavaScript
+The backend of this “fortune teller” questions why we entrust complex emotions to the logic of a machine
+CSS transforms and blurs mimic depth on a two-dimensional plane
+Extruding the act of “finding answers” into an interactive, scrolling ritual.
+The experience is both overwhelming and intimate
+A storm of text collapses under algorithmic fate into a lingering, final answer
+Not because it’s true, but because it’s the
+Only one that remains.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Does anyone love me?</title>
+    <style>
+        html, body{
+            overscroll-behavior-x:none; /*prevents accidental backswipe*/
+        }
+
+        body{
+            font-family:'Times New Roman', Times, serif;
+        }
+
+        #center{
+            position:fixed;
+            display:none;
+            text-align:center;
+            left:50%;
+            top:50%;
+            transform: translate(-50%, -50%);
+            z-index:100;
+            color:black;
+            user-select:none;
+        }
+
+        #answer{
+            opacity:0%;
+        }
+
+        #container{
+            display:none;
+            flex-direction:column;
+            line-height:20px;
+            transform:translateX(1000px);
+        }
+
+        .possibility{
+            margin:2px;
+            position:relative;
+        }
+
+        #intro{
+            position:fixed;
+            display:flex;
+            text-align:center;
+            left:50%;
+            top:49%;
+            transform: translate(-50%, -50%);
+            z-index:101;
+            color:black;
+            margin:0;
+            padding:0;
+        }
+
+        #loveInterest{
+            font-family:'Times New Roman', Times, serif;
+            box-sizing:border-box;
+            outline:none;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <p>Does <input type="text" id="loveInterest" placeholder="Enter a name"> love me?</p>
+    </div>
+    <div id="center">
+        <p>Does <span id="nameCenter"></span> love me?<br><span id ="answer">Find your answer.</span></p>
+    </div>
+    <div id="container"></div>
+    <script>
+        const inputField = document.getElementById('loveInterest');
+        const nameCenter = document.getElementById('nameCenter');
+        const centerDiv = document.getElementById('center');
+        const answer = document.getElementById('answer');
+        const container = document.getElementById('container');
+        const intro = document.getElementById('intro');
+        const width = window.innerWidth;
+
+        const degree = width / 400;
+
+        const words = [
+            "probably loves", "doesn't love", "sometimes loves", "usually loves", "might love", "will love", "should love", "used to love", "must love", "can love", "has to love", "won't love", "can't love", "needs to love", "shouldn't love", "seems to love", "doesn't want to love", "wouldn't love", "rarely loves", "is afraid to love", "no longer loves", "will never love", "never loves", "never loved", "once loved", "barely loves", "secretly loves", "reluctantly loves", "silently loves", "wants to love", "loves", "really loves"
+        ];
+
+        const possibleAnswers = 500;
+
+        const animationDuration = 30;
+
+        container.style.transform = 'translateX(0px)';
+        container.style.transition = `transform ${animationDuration}s cubic-bezier(0.8,0,0.2,1)`;
+
+        function vortex(){
+            for (let i = 0; i < possibleAnswers; i++) {
+                const boxContainer = document.createElement('div');
+                boxContainer.className = 'possibility-container';
+            
+                const box = document.createElement('div');
+                box.className = 'possibility';
+            
+                const randomDegreeOffset = Math.floor(Math.random() * 61) - 30;
+                const individualRotation = Math.floor(Math.random() * 361) - 180;
+                const randomSkew = Math.floor(Math.random() * 61) - 30;
+                const randomBlur = Math.floor(Math.random() * 4);
+                const randomScale = (Math.floor(Math.random() * 21 + 10) / 10);
+            
+                boxContainer.appendChild(box);
+                container.appendChild(boxContainer);
+
+                box.style.transform = 'rotate(0deg)';
+                box.style.filter = 'blur(0px)';
+                box.style.transition = `transform ${animationDuration}s cubic-bezier(0.8,0,0.2,1), filter ${animationDuration}s cubic-bezier(0.8,0,0.2,1)`;
+                boxContainer.style.transition = `transform ${animationDuration}s cubic-bezier(0.8,0,0.2,1)`;
+
+                void box.offsetWidth;
+            
+                box.style.transform = `rotate(${i * degree - randomDegreeOffset + individualRotation}deg) skew(${randomSkew}deg, ${randomSkew}deg) scale(${randomScale})`;
+                box.style.filter = `blur(${randomBlur}px)`;
+                container.style.transform = 'translateX(1000px)';
+            }
+
+            updateName();
+        }
+
+        function updateName() {
+            const inputValue = inputField.value || '';
+            const boxes = document.querySelectorAll('.possibility');
+            
+            boxes.forEach((box) => {
+                const wordsIndex = Math.floor(Math.random() * words.length);
+                box.innerHTML = `${inputValue} ` + `${words[wordsIndex]}` + " me";
+            });
+        
+            nameCenter.innerHTML = inputValue;
+            document.title = `Does ${inputValue} love me?`;
+        }
+
+        inputField.addEventListener('input', updateName);
+
+        document.addEventListener('keypress', function(event) {
+            if (event.key =='Enter') {
+                intro.style.display = 'none';
+                container.style.display = 'flex';
+                centerDiv.style.display = "block";
+                vortex();
+
+                setTimeout(revealAnswer, 30000);
+            }
+        });
+
+        function revealAnswer() {
+            const indexToKeep = Math.floor(Math.random() * possibleAnswers);
+            const boxes = document.querySelectorAll('.possibility');
+
+            answer.style.transition = 'opacity 5s';
+            answer.style.opacity = '100%';
+
+            boxes.forEach((box, i) => {
+                if (i !== indexToKeep) {
+                    box.style.transition = 'opacity 5s';
+                    box.style.opacity = 0;
+                    box.style.userSelect = 'none';
+                    box.style.pointerEvents = 'none';
+                } else {
+                    box.style.filter = 'blur(0px)';
+                }
+            });
+        }
+    </script>
+</body>
+<!--
+Ryan Yan 2024-2026
+-->
+</html>
